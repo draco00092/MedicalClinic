@@ -1,0 +1,98 @@
+<template>
+    <lightning-card>
+        <!--
+        <div>
+            <lightning-input type="date" name="appointmentDate" label="Enter Appointment Date" value={date}
+                style="width:500px;" onchange={dateAction} variant="label-inline"></lightning-input>
+        </div>
+        -->
+        <div class="slds-m-left_medium">
+            <div if:true={specializationOptions}>
+                <lightning-combobox name="recentSpecializations" label="Specializations"
+                    placeholder="Select Specialization" value={specializationValue} options={specializationOptions}
+                    onchange={handleSpecializationChange} style="width: 500px;" variant="label-inline">
+                </lightning-combobox>
+                <p>
+                    <lightning-formatted-text value="Appointment price : " ></lightning-formatted-text>
+                    <lightning-formatted-number value={currentAppointmentFee} format-style="currency" currency-code="USD"></lightning-formatted-number>
+                </p>
+            </div>
+            <!--
+            <div if:true={selectedPhysiciansWithSpecialization}>
+                <lightning-combobox name="recentPhysicians" label="Physicians" placeholder="Select Physicians"
+                    value={physiciansValue} options={selectedPhysiciansWithSpecialization}
+                    onchange={handlePhysicianChange} style="width: 500px;" variant="label-inline">
+                </lightning-combobox>
+            </div>
+            -->
+            <div if:true={timePicker}>
+                <lightning-input type="datetime" name="appointmentTime" label="Appointment Time" value={date}
+                    min={curentDate} style="font-style: normal; width:500px;"
+                    variant="label-inline" onchange={dateAction}></lightning-input>
+            </div>
+            <div style="width: 1000px;" if:true={isappointmentDataAvailable}>
+                <lightning-datatable
+                        key-field="id"
+                        data={appointmentData}
+                        show-row-number-column
+                        row-number-offset={rowOffset}
+                        hide-checkbox-column
+                        columns={appointmentColumns}
+                        onrowaction={handleRowAction}>
+                </lightning-datatable>
+            </div>
+            <div if:false={isappointmentDataAvailable} >
+                <p>
+                    <lightning-formatted-text value={appointmentDataMessage} ></lightning-formatted-text>
+                </p>
+            </div>
+        </div>
+
+        <template if:true={isModalOpen}>
+            <!-- Modal/Popup Box LWC starts here -->
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal/Popup Box LWC header here -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                            <lightning-icon icon-name="utility:close"
+                                alternative-text="close"
+                                variant="inverse"
+                                size="small" ></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Booking Details</h2>
+                    </header>
+                    <!-- Modal/Popup Box LWC body starts here -->
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <div class="slds-p-around_medium lgc-bg">
+                            <lightning-input type="text" label="Physician Name" value={appointedPhysicianDetails.Name} variant="label-inline" readonly></lightning-input>
+                        </div>
+                        <div class="slds-p-around_medium lgc-bg">
+                            <lightning-input type="text" label="Appointment Price" value={currentAppointmentFee} variant="label-inline" readonly></lightning-input>
+                        </div>
+                        <div class="slds-p-around_medium lgc-bg">
+                            <lightning-input type="text" label="Patient Name" variant="label-inline" onchange={patientNameAction}></lightning-input>
+                        </div>
+                        <div class="slds-p-around_medium lgc-bg">
+                            <lightning-input type="email" label="Patient Email" variant="label-inline" onchange={patientEmailAction}></lightning-input>
+                        </div>
+                        <div class="slds-p-around_medium lgc-bg">
+                            <lightning-input type="tel" label="Patient Phone" name="patiendPhone" variant="label-inline" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" onchange={patientPhoneAction}></lightning-input>
+                        </div>
+                        <div class="slds-p-around_medium lgc-bg">
+                            <lightning-input type="text" label="Patient Address" variant="label-inline" onchange={patientAddressAction}></lightning-input>
+                        </div>
+                    </div>
+                    <!-- Modal/Popup Box LWC footer starts here -->
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
+                        <button class="slds-button slds-button_brand" onclick={submitDetails} title="OK">OK</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+    </lightning-card>
+</template>
